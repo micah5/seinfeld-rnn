@@ -27,19 +27,19 @@ FLOYD, PREDICT, ITERATIONS = d['floyd'], d['predict'], d['iterations']
 if PREDICT == True:
     ITERATIONS = 2
 
-path = 'sienfeld_modified.txt'
+path = 'seinfeld_modified.txt'
 with io.open(path, encoding='utf-8') as f:
     text = f.read().lower()
 
 print('corpus length:', len(text))
 
-chars = set(text)
 words = set(text.split())
+print('words', words)
+words = sorted(words)
+print('sorted words', words)
 
-print("chars:",type(chars))
 print("words",type(words))
 print("total number of unique words",len(words))
-print("total number of unique chars", len(chars))
 
 
 word_indices = dict((c, i) for i, c in enumerate(words))
@@ -90,12 +90,12 @@ model.add(Activation('softmax'))
 
 model.compile(loss='categorical_crossentropy', optimizer='rmsprop')
 
-#if os.path.isfile('sienfeld_weights'):
+#if os.path.isfile('seinfeld_weights'):
 if PREDICT == True:
     if FLOYD == True:
-        model.load_weights('/model/sienfeld_weights.hdf5')
+        model.load_weights('/model/seinfeld_weights.hdf5')
     else:
-        model.load_weights('sienfeld_weights.hdf5')
+        model.load_weights('seinfeld_weights.hdf5')
 
 def sample(a, temperature=1.0):
     # helper function to sample an index from a probability array
@@ -112,9 +112,9 @@ for iteration in range(1, ITERATIONS):
     if PREDICT == False:
         model.fit(X, y, batch_size=128, nb_epoch=2)
         if FLOYD == True:
-            model.save_weights('/output/sienfeld_weights.hdf5', overwrite=True)
+            model.save_weights('/output/seinfeld_weights.hdf5', overwrite=True)
         else:
-            model.save_weights('sienfeld_weights%d.hdf5' % iteration, overwrite=True)
+            model.save_weights('seinfeld_weights%d.hdf5' % iteration, overwrite=True)
 
     start_index = random.randint(0, len(list_words) - maxlen - 1)
 
@@ -130,7 +130,7 @@ for iteration in range(1, ITERATIONS):
         sys.stdout.write(generated)
         print()
 
-        for i in range(100):
+        for i in range(1000):
             x = np.zeros((1, maxlen, len(words)))
             for t, word in enumerate(sentence):
                 x[0, t, word_indices[word]] = 1.
