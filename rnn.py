@@ -18,12 +18,14 @@ parser.add_argument("-f", "--floyd", dest="floyd", default=False, action='store_
                     help="changes path of output to /output")
 parser.add_argument("-p", "--predict", dest="predict", default=False, action='store_true',
                     help="predicts from model. if floyd argument true, uses path /model to find.")
+parser.add_argument("-in", "--intensity", dest="intensity",
+                    help="only predicts at a certain intensity")
 parser.add_argument("-i", "--iterations", dest="iterations", type=int, default=10,
                     help="number of iterations to run")
 
 args = parser.parse_args()
 d = vars(args)
-FLOYD, PREDICT, ITERATIONS = d['floyd'], d['predict'], d['iterations']
+FLOYD, PREDICT, INTENSITY, ITERATIONS = d['floyd'], d['predict'], d['intensity'], d['iterations']
 if PREDICT == True:
     ITERATIONS = 2
 
@@ -118,7 +120,10 @@ for iteration in range(1, ITERATIONS):
 
     start_index = random.randint(0, len(list_words) - maxlen - 1)
 
-    for diversity in [0.2, 0.5, 1.0, 1.2]:
+    arr = [0.2, 0.5, 1.0, 1.2]
+    if INTENSITY != None:
+        arr = [INTENSITY]
+    for diversity in arr:
         print()
         print('----- diversity:', diversity)
         generated = ''
